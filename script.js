@@ -17,6 +17,8 @@ function qUp(){
     }
 }
 
+
+
 //car constructor function
 function Car(){
     this.year = randoYear();
@@ -25,8 +27,9 @@ function Car(){
     this.plate = randoPlate();
     this.color = randoColor();
     this.time = randoTime();
+    // this.new = this.time;
     // this.timer = function(){
-
+    //     return --this.new
     // }
 }
 
@@ -59,6 +62,8 @@ function displayQ(){
 function parkCars(){
     displayQ();
     displayParked();
+    console.log('Cars waiting = ' + car_q);
+    console.log('Cars currently parked = ' + parked_cars);
     if (car_q.length !== 0){
         if (parked_cars.length < 10){
             var temp = car_q.pop();
@@ -79,10 +84,8 @@ function parkCars(){
 //leave lot
 function leaveLot(e){
     for (let i = 0; i < parked_cars.length;i++){
-            console.log(parked_cars[i])
         if (parked_cars[i].plate === e.plate){
             parked_cars.splice(i, 1);
-            console.log(parked_cars);
             parkCars();
         }
     }
