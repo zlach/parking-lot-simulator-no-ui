@@ -1,4 +1,5 @@
 let car_q = [];
+let parked_cars = [];
 
 function commence(){
     qUp();
@@ -6,6 +7,7 @@ function commence(){
     parkCars();
 }
 
+//qUp
 function qUp(){
     let i = 0;
     while (i < 100){
@@ -15,11 +17,18 @@ function qUp(){
     }
 }
 
-//does all the action
+//car constructor function
+function Car(){
+    this.year = randoYear();
+    this.make = randoMake();
+    this.model = randoModel(this.make);
+    this.plate = randoPlate();
+    this.color = randoColor();
+    this.time = randoTime();
+    // this.timer = function(){
 
-
-
-
+    // }
+}
 
 //changes display from greeting to the program visual
 function changeDisplay(){
@@ -30,6 +39,7 @@ function changeDisplay(){
 
 //shows the queue below the spot visual
 function displayQ(){
+    document.getElementById('q').innerHTML = '';
     for (let i = 0; i < car_q.length; i++){
         var iDiv = document.createElement('div');
         iDiv.className = 'q-car';
@@ -41,19 +51,68 @@ function displayQ(){
 }
 
 
-//car constructor function
-function Car(){
-    this.year = randoYear();
-    this.make = randoMake();
-    this.model = randoModel(this.make);
-    this.plate = randoPlate();
-    this.color = randoColor();
-    this.time = randoTime();
-    
-    // this.timer = function(){
 
-    // }
+
+
+
+//parks cars to open spots
+function parkCars(){
+    displayQ();
+    displayParked();
+    if (car_q.length !== 0){
+        if (parked_cars.length < 10){
+            var temp = car_q.pop();
+            parked_cars.push(temp);
+            setTimeout(function(){leaveLot(temp)}, temp.time);
+            parkCars();
+        }
+    }
 }
+
+
+//start timers
+// function startTimer(e){
+//     console.log(e);
+//     setTimeout(leaveLot(e), e.time);
+// }
+
+//leave lot
+function leaveLot(e){
+    for (let i = 0; i < parked_cars.length;i++){
+            console.log(parked_cars[i])
+        if (parked_cars[i].plate === e.plate){
+            parked_cars.splice(i, 1);
+            console.log(parked_cars);
+            parkCars();
+        }
+    }
+}
+
+
+//updates spots visual after deleted car
+function displayParked(){//need value?
+    document.getElementById('parking-spots').innerHTML = '';
+    for (let i = 0; i < parked_cars.length; i++){
+        var jDiv = document.createElement('div');
+        jDiv.className = 'spot';
+        jDiv.style.color = `${parked_cars[i].color}`;
+        jDiv.innerHTML = parked_cars[i].year + ' ' + parked_cars[i].make + ' ' + parked_cars[i].model;
+        document.getElementById('parking-spots').appendChild(jDiv);
+    }
+}
+
+
+
+
+
+
+
+
+//=== RANDOMIZERS BELOW ==/
+
+
+
+
 
 //selects random year between 1969 and 2019
 function randoYear(){
@@ -86,11 +145,15 @@ function randoModel(make){
     }
 }
 
+let plate_counter = 0;
+let plate = '';
+
 //selects random plate
 function randoPlate(){
+    plate_counter += 1;
     let alphabet = 'abcdefghijklmnopqrstuvwxyz';
-    let plate = '';
-    for (let i = 0;i < 7;i++){
+    plate += plate_counter;
+    for (let i = 0;i < 4;i++){
         var one_two = Math.floor(Math.random() * 2);
         if (one_two === 0){
             plate += Math.floor(Math.random() * 10);
@@ -98,7 +161,9 @@ function randoPlate(){
             plate += alphabet[Math.floor(Math.random() * 26)];
         }
     }
-    return plate;
+    let plate_sub = plate;
+    plate = '';
+    return plate_sub;
 }
 
 //selects random color
@@ -123,7 +188,12 @@ function randoTime(){
 
 
 
-//===Messin==//
+
+
+
+
+
+//===Not used==//
 
 // let aasdf = [];
 
