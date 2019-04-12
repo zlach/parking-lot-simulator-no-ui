@@ -1,6 +1,11 @@
 let car_q = [];
 let parked_cars = [];
 
+// let taken_spaces = [];
+// let available_spaces = [];
+
+// const MAX_NUMBER_OF_SPACES = 10;
+
 function commence(){
     qUp();
     changeDisplay();
@@ -61,13 +66,14 @@ function displayQ(){
 //parks cars to open spots
 function parkCars(){
     displayQ();
-    displayParked();
-    console.log('Cars waiting = ' + car_q);
-    console.log('Cars currently parked = ' + parked_cars);
+    console.log('?');
+    // console.log('Cars waiting = ' + car_q);
+    // console.log('Cars currently parked = ' + parked_cars);
     if (car_q.length !== 0){
         if (parked_cars.length < 10){
-            var temp = car_q.pop();
+            var temp = car_q.shift();
             parked_cars.push(temp);
+            displayParked(temp); //prints the car shifted out of the queue to the parking lot on the screen
             setTimeout(function(){leaveLot(temp)}, temp.time);
             parkCars();
         }
@@ -85,6 +91,7 @@ function parkCars(){
 function leaveLot(e){
     for (let i = 0; i < parked_cars.length;i++){
         if (parked_cars[i].plate === e.plate){
+            removeDisplay(parked_cars[i]);
             parked_cars.splice(i, 1);
             parkCars();
         }
@@ -92,19 +99,48 @@ function leaveLot(e){
 }
 
 
-//updates spots visual after deleted car
-function displayParked(){//need value?
-    document.getElementById('parking-spots').innerHTML = '';
-    for (let i = 0; i < parked_cars.length; i++){
-        var jDiv = document.createElement('div');
-        jDiv.className = 'spot';
-        jDiv.style.color = `${parked_cars[i].color}`;
-        jDiv.innerHTML = parked_cars[i].year + ' ' + parked_cars[i].make + ' ' + parked_cars[i].model;
-        document.getElementById('parking-spots').appendChild(jDiv);
+
+
+// //updates spots visual after deleted car
+// function displayParked(){//need value?
+//     document.getElementById('parking-spots').innerHTML = '';
+//     for (let i = 0; i < parked_cars.length; i++){
+//         var jDiv = document.createElement('div');
+//         jDiv.className = 'spot';
+//         jDiv.style.color = `${parked_cars[i].color}`;
+//         jDiv.innerHTML = parked_cars[i].year + ' ' + parked_cars[i].make + ' ' + parked_cars[i].model;
+//         document.getElementById('parking-spots').appendChild(jDiv);
+//     }
+// }
+
+function removeDisplay(car){
+    var spots = document.getElementsByClassName('spot'); //gets the spots to iterate over
+    for (let item of spots){ //this apparently can be used to iterate over the .spot divs
+        if (item.innerHTML == car.year + ' ' + car.make + ' ' + car.model + '<br>' + car.plate){
+            item.innerHTML = '';
+            break
+        }
     }
 }
 
+function displayParked(temp){
+    var spots = document.getElementsByClassName('spot'); //gets the spots to iterate over
+    for (let item of spots){ //this apparently can be used to iterate over the .spot divs
+        if (item.innerHTML == ''){
+            item.style.color = `${temp.color}`;
+            item.innerHTML = temp.year + ' ' + temp.make + ' ' + temp.model + '<br>' + temp.plate;
+            break
+        }
+    }
+}
 
+// function makeSpaces(){
+//     for(var i = 0; i < MAX_NUMBER_OF_SPACES; i++){
+//         var space = new Object({isTaken:});
+
+//         available_spaces.push(space);
+//     }
+// }
 
 
 
@@ -186,7 +222,7 @@ function randoColor(){
 
 //selects random amount of time
 function randoTime(){
-    return Math.floor(Math.random() * 8 + 1) * 1000; 
+    return Math.floor(Math.random() * 5 + 1) * 1000; 
 }
 
 
